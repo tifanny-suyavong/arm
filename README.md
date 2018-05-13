@@ -2,6 +2,8 @@
 
 Something for ARM STM32F429 microcontroller.
 
+Use `arm-none-eabi-objdump -D linker` to check the generated data.
+
 ## Useful links
 
 * [STM32F4 Reference Manual](http://www.st.com/content/ccc/resource/technical/document/reference_manual/3d/6d/5a/66/b4/99/40/d4/DM00031020.pdf/files/DM00031020.pdf/jcr:content/translations/en.DM00031020.pdf)
