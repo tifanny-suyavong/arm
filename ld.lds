@@ -10,8 +10,8 @@ MEMORY
         bkram       : ORIGIN = 0x40024000, LENGTH = 4k
 }
 
-_heap_size = 0;
-_stack_size = 0;
+_heap_size = 256;
+_stack_size = 1024;
 
 _estack = ORIGIN(sram1) + LENGTH(sram1);
 
@@ -21,9 +21,9 @@ SECTIONS
         {
                 KEEP(*(.isr_vector))
         } > flash
-        
+
         .text :
-        {                
+        {
         } > flash
 
         .data :
