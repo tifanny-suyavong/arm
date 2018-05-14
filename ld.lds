@@ -51,4 +51,7 @@ SECTIONS
                 *(.heap*)
                 _heap = .;
         } > sram1
+
+        . = ALIGN(4);
+        end = .;
 }
