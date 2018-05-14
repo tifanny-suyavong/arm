@@ -1,8 +1,10 @@
-// Ref manual page 376
-__attribute__((section (".isr_vector"))) const int irq_table[107];
+#include "lib/stm32/inc/stm32f4xx.h"
+#include "lib/stm32/common.h"
 
-int main()
+int main(void)
 {
-  char *c = "Toto is happy c:";
+  clock_init();
+  while (1)
+    continue;
   return 0;
 }
