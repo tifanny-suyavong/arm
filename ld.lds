@@ -1,4 +1,4 @@
-ENTRY(main);
+ENTRY(entry);
 
 MEMORY
 {
@@ -13,20 +13,42 @@ MEMORY
 _heap_size = 256;
 _stack_size = 1024;
 
-_estack = ORIGIN(sram1) + LENGTH(sram1);
+PROVIDE(_estack = ORIGIN(sram1) + LENGTH(sram1));
 
 SECTIONS
 {
-        .isr_vector :
-        {
-                KEEP(*(.isr_vector))
-        } > flash
-
         .text :
         {
+                KEEP(*(.isr_vector))
+                *(.text*)
+                . = ALIGN(4);
+                *(.rodata*)
+                . = ALIGN(4);
         } > flash
+
+        . = ALIGN(4);
+        _etext = .;
 
         .data :
         {
+                _data = .;
+                *(.data*)
+                . = ALIGN(4);
+                _edata = .;
+        } > sram1 AT > flash
+        _data_loadaddr = LOADADDR(.data);
+
+        .bss :
+        {
+                *(.bss*)
+                *(COMMON)
+                . = ALIGN(4);
+                _ebss .;
+        } > sram1
+
+        .heap (NOLOAD) :
+        {
+                *(.heap*)
+                _heap = .;
         } > sram1
 }
