@@ -13,7 +13,7 @@ MEMORY
 _heap_size = 256;
 _stack_size = 1024;
 
-PROVIDE(_estack = ORIGIN(sram1) + LENGTH(sram1));
+PROVIDE(_stack = ORIGIN(sram1) + LENGTH(sram1));
 
 SECTIONS
 {
@@ -43,7 +43,7 @@ SECTIONS
                 *(.bss*)
                 *(COMMON)
                 . = ALIGN(4);
-                _ebss .;
+                _ebss = .;
         } > sram1
 
         .heap (NOLOAD) :

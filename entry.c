@@ -1,5 +1,12 @@
+#include <stdint.h>
+#include <sys/types.h>
+
 extern void *_stack;
-extern uint32_t data // ...
+extern uint32_t _data;
+extern uint32_t _edata;
+extern uint32_t _ebss;
+extern uint32_t _data_loadaddr;
+//extern uint32_t data // ...
 
 void dummy_handler()
 {
@@ -8,32 +15,31 @@ void dummy_handler()
 
 void entry()
 {
-  uint32_t *src = &_data_loadaddr, *dst = &d_data;
+  uint32_t *src = &_data_loadaddr, *dst = &_data;
   while (dst < &_edata)
     *dst++ = *src++;
   while (dst < &_ebss)
     *dst++ = 0;
-  SCB->CCR |= SCB_CCR_STKALIGN_Msk;
-  main();
+//  SCB->CCR |= SCB_CCR_STKALIGN_Msk;
 }
 
-HAL_StatusTypeDef HAL_InitTick(uint32_t TickPriority)
-{
-  HAL_SYSTICK_Config(SystemCoreClock / 10000U);
-}
+/* HAL_StatusTypeDef HAL_InitTick(uint32_t TickPriority) */
+/* { */
+/*   HAL_SYSTICK_Config(SystemCoreClock / 10000U); */
+/* } */
 
-HAL_GetTick(void)
-{
-  return gTick;
-}
+/* HAL_GetTick(void) */
+/* { */
+/*   return gTick; */
+/* } */
 
-static void
-SysTickHandler(void)
-{
-  ++gTick;
-}
+/* static void */
+/* SysTickHandler(void) */
+/* { */
+/*   ++gTick; */
+/* } */
 
-uint32_t interrupt_vector_table[] __atribute__((section(".vectors")))
+uint32_t interrupt_vector_table[107] __attribute__((section(".vectors"))) = 
 {
   (uint32_t) &_stack,       // Initial stack location
   (uint32_t) entry,         //Reset vector
@@ -42,8 +48,5 @@ uint32_t interrupt_vector_table[] __atribute__((section(".vectors")))
   (uint32_t) dummy_handler, // Memory Management Fault Interrupt
   (uint32_t) dummy_handler, // Bus Fault Interrupt
   (uint32_t) dummy_handler, // Usage Fault Interrupt
-  (uint32_t) 0,
-  (uint32_t) 0,
-  (uint32_t) 0,
-}
+};
 
