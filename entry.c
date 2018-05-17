@@ -7,14 +7,15 @@ extern uint32_t _edata;
 extern uint32_t _ebss;
 extern uint32_t _data_loadaddr;
 
-extern void main();
+extern int main(void);
 
-void dummy_handler()
+void dummy_handler(void)
 {
-  while (1);
+  while (1)
+    continue;
 }
 
-void entry()
+void entry(void)
 {
   /* uint32_t *src = &_data_loadaddr, *dst = &_data; */
   /* while (dst < &_edata) */
@@ -24,7 +25,7 @@ void entry()
   main();
 }
 
-uint32_t interrupt_vector_table[107] __attribute__((section(".vectors"))) = 
+uint32_t interrupt_vector_table[107] __attribute__((section(".vectors"))) =
 {
   (uint32_t) &_stack,       // Initial stack location
   (uint32_t) entry,         //Reset vector
