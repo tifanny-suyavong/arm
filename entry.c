@@ -16,11 +16,11 @@ void dummy_handler()
 
 void entry()
 {
-  uint32_t *src = &_data_loadaddr, *dst = &_data;
-  while (dst < &_edata)
-    *dst++ = *src++;
-  while (dst < &_ebss)
-    *dst++ = 0;
+  /* uint32_t *src = &_data_loadaddr, *dst = &_data; */
+  /* while (dst < &_edata) */
+  /*   *dst++ = *src++; */
+  /* while (dst < &_ebss) */
+  /*   *dst++ = 0; */
   main();
 }
 
