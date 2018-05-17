@@ -13,7 +13,7 @@ ELF=startup.elf
 BIN=startup.bin
 
 all:
-	$(CC) -c $(SRC)
+	$(CC) $(CFLAGS) -c $(SRC)
 	$(LD) -T $(LD_SCRIPT) $(OBJS) -o $(ELF)
 	$(OBJCOPY) -O binary -S $(ELF) $(BIN)
 
