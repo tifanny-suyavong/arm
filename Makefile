@@ -14,10 +14,10 @@ BIN=startup.bin
 
 all:
 	$(CC) -c $(SRC)
-	$(LD) -T $(LD_SCRIPT) $(OBJS) -o $(BIN)
+	$(LD) -T $(LD_SCRIPT) $(OBJS) -o $(ELF)
 
 copy:
 	$(OBJCOPY) -O binary -S $(ELF) $(BIN)
 
 clean:
-	$(RM) $(BIN) *.o *~ *.swp
+	$(RM) $(BIN) $(ELF) *.o *~ *.swp
