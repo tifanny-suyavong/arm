@@ -1,7 +1,12 @@
+void break_here(void)
+{
+  return;
+}
+
 int main(void)
 {
   while (1)
-    continue; //asm("BKPT");
+    break_here();
 
   return 0;
 }

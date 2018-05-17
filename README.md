@@ -16,7 +16,14 @@ Use `make copy` to generate `startup.bin`.
 ### Debugging
 ``` bash
 st-util # start GDB server
-arm-none-eabi-gdb # in gdb use `target remote 0.0.0.0:4242` to connect to the GDB server
+arm-none-eabi-gdb startup.elf
+```
+
+``` gdb
+target remote 0.0.0.0:4242
+load
+b break_here
+continue
 ```
 
 ## Useful links

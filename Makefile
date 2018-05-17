@@ -1,8 +1,8 @@
 CC=arm-none-eabi-gcc
 LD=arm-none-eabi-ld
 OBJCOPY=arm-none-eabi-objcopy
-CFLAGS=-Os -W -Wall -Wno-deprecated-declaration -Wno-unused-parameter -Wundef\
--ffunction-sections -mcpu=cortex-m4 -fno-exceptions -g3 -mfloat-abi=hard -mthumb \
+CFLAGS=-O0 -W -Wall -Wno-deprecated-declaration -Wno-unused-parameter -Wundef\
+-ffunction-sections -mcpu=cortex-m4 -fno-exceptions -g -mfloat-abi=hard -mthumb \
 -fno-omit-frame-pointer
 
 LD_SCRIPT=ld.lds
