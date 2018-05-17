@@ -6,7 +6,8 @@ extern uint32_t _data;
 extern uint32_t _edata;
 extern uint32_t _ebss;
 extern uint32_t _data_loadaddr;
-//extern uint32_t data // ...
+
+extern void main();
 
 void dummy_handler()
 {
@@ -20,24 +21,8 @@ void entry()
     *dst++ = *src++;
   while (dst < &_ebss)
     *dst++ = 0;
-//  SCB->CCR |= SCB_CCR_STKALIGN_Msk;
+  main();
 }
-
-/* HAL_StatusTypeDef HAL_InitTick(uint32_t TickPriority) */
-/* { */
-/*   HAL_SYSTICK_Config(SystemCoreClock / 10000U); */
-/* } */
-
-/* HAL_GetTick(void) */
-/* { */
-/*   return gTick; */
-/* } */
-
-/* static void */
-/* SysTickHandler(void) */
-/* { */
-/*   ++gTick; */
-/* } */
 
 uint32_t interrupt_vector_table[107] __attribute__((section(".vectors"))) = 
 {
@@ -49,4 +34,3 @@ uint32_t interrupt_vector_table[107] __attribute__((section(".vectors"))) =
   (uint32_t) dummy_handler, // Bus Fault Interrupt
   (uint32_t) dummy_handler, // Usage Fault Interrupt
 };
-
