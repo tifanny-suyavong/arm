@@ -34,4 +34,5 @@ uint32_t interrupt_vector_table[107] __attribute__((section(".vectors"))) =
   (uint32_t) dummy_handler, // Memory Management Fault Interrupt
   (uint32_t) dummy_handler, // Bus Fault Interrupt
   (uint32_t) dummy_handler, // Usage Fault Interrupt
+  [22] = (uint32_t)dummy_handler, // bouton,
 };
