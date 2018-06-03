@@ -6,9 +6,8 @@ Use `arm-none-eabi-objdump -D linker` to check the generated data.
 
 ## Instructions
 ### Compilation
-Use `make` to compile.
 
-Use `make copy` to generate `startup.bin`.
+Use `make` to compile.
 
 ### Flashing
 `st-flash --format binary write startup.bin 0x08000000`
