@@ -31,6 +31,6 @@ int main(void)
         // TODO: Find value to enable led
         *led_output_data = *led_output_data & (1 << 12);
     else
-        *led_output_data = *led_output_data & 0x0;
+        *led_output_data = *led_output_data & ~(1 << 12);
     return 0;
 }
