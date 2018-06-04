@@ -3,7 +3,7 @@ LD=arm-none-eabi-ld
 OBJCOPY=arm-none-eabi-objcopy
 CFLAGS=-O0 -W -Wall -Wno-deprecated-declaration -Wno-unused-parameter -Wundef\
 -ffunction-sections -mcpu=cortex-m4 -fno-exceptions -g -mfloat-abi=hard -mthumb \
--fno-omit-frame-pointer
+-fno-omit-frame-pointer -Wextra
 
 LD_SCRIPT=ld.lds
 
