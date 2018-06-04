@@ -23,4 +23,4 @@ all:
 	$(OBJCOPY) -O binary -S $(ELF) $(BIN)
 
 clean:
-	$(RM) $(BIN) $(ELF) $(SRC_DIR)/*.o *~ *.swp
+	$(RM) $(BIN) $(ELF) $(OBJS) *~ *.swp
