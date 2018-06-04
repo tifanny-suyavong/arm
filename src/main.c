@@ -19,18 +19,21 @@ int main(void)
     volatile int *button_input_data = (volatile int *) GPIOA_IDR;
     volatile int *led_output_data = (volatile int *) GPIOG_ODR;
 
-    // Enable all the GPIOs
-    *rcc = *rcc | ((1 << 11) - 1);
+    while (1)
+    {
+        // Enable all the GPIOs
+        *rcc = *rcc | ((1 << 11) - 1);
   
-    // TODO: Find gpio to enable write mode for ODR
-    *gpioa_mode = *gpioa_mode | PORTA_MODE;
-    *gpiog_mode = *gpiog_mode | PORTG_MODE;
+        // TODO: Find gpio to enable write mode for ODR
+        *gpioa_mode = *gpioa_mode | PORTA_MODE;
+        *gpiog_mode = *gpiog_mode | PORTG_MODE;
     
-    // TODO: Find value for pushed button
-    if (*button_input_data & 0x1)
-        // TODO: Find value to enable led
-        *led_output_data = *led_output_data & (1 << 12);
-    else
-        *led_output_data = *led_output_data & ~(1 << 12);
+        // TODO: Find value for pushed button
+        if (*button_input_data & 0x1)
+            // TODO: Find value to enable led
+            *led_output_data = *led_output_data & (1 << 12);
+        else
+            *led_output_data = *led_output_data & ~(1 << 12);
+    }
     return 0;
 }
