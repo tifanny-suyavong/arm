@@ -25,7 +25,7 @@ int main(void)
     volatile int *led_output_data = (volatile int *) GPIOG_ODR;
 
     // Enable all the GPIOs
-    *rcc = *rcc | 0x1FF;
+    *rcc = *rcc | 0x7FF;
 
     // Set GPIO mode
     *gpioa_mode = SET_MODER_INPUT(*gpioa_mode, 0);

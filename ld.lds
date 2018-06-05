@@ -2,27 +2,21 @@ ENTRY(entry);
 
 MEMORY
 {
-        flash (rwx)  : ORIGIN = 0x08000000, LENGTH = 2048k
+        flash (rx)  : ORIGIN = 0x08000000, LENGTH = 2048k
         ccm         : ORIGIN = 0x10000000, LENGTH = 64k
-        sram1 (rwx) : ORIGIN = 0x20000000, LENGTH = 112k
-        sram2 (rwx) : ORIGIN = 0x20010000, LENGTH = 16k
-        sram3 (rwx) : ORIGIN = 0x20020000, LENGTH = 64k
+        ram (rwx)   : ORIGIN = 0x20000000, LENGTH = 192k
         bkram       : ORIGIN = 0x40024000, LENGTH = 4k
 }
 
 _heap_size = 256;
 _stack_size = 1024;
 
-PROVIDE(_stack = ORIGIN(sram1) + LENGTH(sram1));
-
 SECTIONS
 {
         .text :
         {
-                KEEP(*(.isr_vector))
+                KEEP(*(.vectors))
                 *(.text*)
-                . = ALIGN(4);
-                *(.rodata*)
                 . = ALIGN(4);
         } > flash
 
@@ -35,7 +29,7 @@ SECTIONS
                 *(.data*)
                 . = ALIGN(4);
                 _edata = .;
-        } > sram1 AT > flash
+        } > ram AT > flash
         _data_loadaddr = LOADADDR(.data);
 
         .bss :
@@ -44,14 +38,16 @@ SECTIONS
                 *(COMMON)
                 . = ALIGN(4);
                 _ebss = .;
-        } > sram1
+        } > ram
 
         .heap (NOLOAD) :
         {
                 *(.heap*)
                 _heap = .;
-        } > sram1
+        } > ram
 
         . = ALIGN(4);
         end = .;
 }
+
+PROVIDE(_stack = ORIGIN(ram) + LENGTH(ram));
