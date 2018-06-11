@@ -1,4 +1,9 @@
 #include "interrupts.h"
+#include "uart.h"
+
+#define MODER_INPUT 0
+#define MODER_OUTPUT 1
+#define MODER_ALTERNATE 2
 
 #define RCC_AHB1ENR  (0x40023800 + 0x30)         // Reset and clock controller
 
@@ -13,10 +18,8 @@
 #define GPIOG_MODER  0x40021800
 #define GPIOG_ODR    (GPIOG_MODER + ODR_OFF)
 
-#define SET_MODER_INPUT(A, POS)                         \
-    (A & ~(1 << (POS * 2 + 1))) & ~(1 << (POS * 2))
-#define SET_MODER_OUTPUT(A, POS)                        \
-    (A & ~(1 << (POS * 2 + 1))) | (1 << (POS * 2))
+#define SET_MODER_MODE(A, POS, MODE)                            \
+  (((A) & ~(3 << ((POS) * 2))) | ((MODE) << ((POS) * 2)))
 
 void manage_led(int turn_on)
 {
@@ -45,6 +48,7 @@ int main(void)
 {
     volatile int *rcc = (volatile int *) RCC_AHB1ENR;
     volatile int *gpioa_mode = (volatile int *) GPIOA_MODER;
+    volatile int *gpiob_mode = (volatile int *) GPIOB_MODER;
     volatile int *gpiog_mode = (volatile int *) GPIOG_MODER;
     volatile int *exticr1 = (volatile int *) SYSCFG_EXTICR1;
     volatile int *extimr = (volatile int *) EXTI_IMR;
@@ -53,11 +57,14 @@ int main(void)
     volatile int *nvic_iser0 = (volatile int *) NVIC_ISER0;
 
     // Enable all the GPIOs
+    // TODO: enable only wanted GPIO (A, B, G)
     *rcc = *rcc | 0x7FF;
 
     // Set GPIO mode
-    *gpioa_mode = SET_MODER_INPUT(*gpioa_mode, 0);
-    *gpiog_mode = SET_MODER_OUTPUT(*gpiog_mode, 13);
+    *gpioa_mode = SET_MODER_MODE(*gpioa_mode, 0, MODER_INPUT);
+    *gpiob_mode = SET_MODER_MODE(*gpiob_mode, 6, MODER_ALTERNATE);
+    *gpiob_mode = SET_MODER_MODE(*gpiob_mode, 7, MODER_ALTERNATE);
+    *gpiog_mode = SET_MODER_MODE(*gpiog_mode, 13, MODER_OUTPUT);
 
     // Enable external interrupt for PA0 (user button)
     *exticr1 &= 0xFFFFFFF0;
@@ -73,11 +80,7 @@ int main(void)
     *nvic_iser0 |= 1 << 6;
 
     while (1)
-    {
-        /* if (*button_input_data & 0x1) */
-        /*     *led_output_data = *led_output_data | (1 << 13); */
-        /* else */
-        /*     *led_output_data = *led_output_data & ~(1 << 13); */
-    }
+      continue;
+
     return 0;
 }
