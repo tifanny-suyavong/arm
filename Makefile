@@ -22,5 +22,8 @@ all:
 	$(LD) -T $(LD_SCRIPT) $(OBJS) -o $(ELF)
 	$(OBJCOPY) -O binary -S $(ELF) $(BIN)
 
+gdb:
+	arm-none-eabi-gdb startup.elf
+
 clean:
 	$(RM) $(BIN) $(ELF) $(OBJS) *~ *.swp

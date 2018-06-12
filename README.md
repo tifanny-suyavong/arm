@@ -14,15 +14,8 @@ Use `make` to compile.
 
 ### Debugging
 ``` bash
-st-util # start GDB server
-arm-none-eabi-gdb startup.elf
-```
-
-``` gdb
-target remote 0.0.0.0:4242
-load
-b break_here
-continue
+st-util # start GDB server in another terminal
+make gdb # start gdb, connect, flash and break on main
 ```
 
 ## Useful links
@@ -51,3 +44,15 @@ UART 2 pins (RX, TX).
 conf module UART (param clock, baudrate)
 
 On choisir AF7 avec PB6/PB7 pour l'USART1_TX/RX
+
+pour le baudrate, faut pas qu'il soit fixe, il doit etre set sur le diviseur de
+la clock. Lire chapitre RCC sur les clocks.
+
+STM32F4xx                   STM32F429-Discovery
+MAX CLOCK in MHz            180
+APB1 CLOCK in MHz           45
+APB2 CLOCK in MHz           90
+DEFAULT PLL INPUT CLOCK     HSE 8MHz
+PLL_M                       8
+PLL_N                       360
+PLL_P                       2
