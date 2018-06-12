@@ -7,7 +7,9 @@
 #define MODER_ALTERNATE 2
 
 // Reset and clock controller
-#define RCC_AHB1ENR  (0x40023800 + 0x30)
+#define RCC_BASE     0x40023800
+#define RCC_AHB1ENR  (RCC_BASE + 0x30)
+#define RCC_APB2ENR  (RCC_BASE + 0x44)
 
 // Offset input/output
 #define IDR_OFF      0x10
@@ -49,11 +51,65 @@ static void set_moder_mode(volatile int *gpio_moder, int pos, int mode)
   *gpio_moder = (*gpio_moder & ~(3 << (pos * 2))) | (mode << (pos * 2));
 }
 
+static void enable_uart_transmitter(void)
+{
+  volatile int *usart1_cr1 = (volatile int *)USART1_CR1;
+
+  // Enable USART
+  // Set UE and M (8 bits)
+  *usart1_cr1 = (*usart1_cr1 | 0x2000) & 0xFFFFEFFF;
+
+  // Disable parity
+  *usart1_cr1 &= 0xFFFFFBFF;
+
+  // Set 1 stop bit
+  volatile int *usart1_cr2 = (volatile int *)USART1_CR2;
+  *usart1_cr2 &= 0xFFFFCFFF;
+
+  // Disable DMAT
+  volatile int *usart1_cr3 = (volatile int *)USART1_CR3;
+  *usart1_cr3 &= 0xFFFFFF7F;
+
+  // Configure baud rate for 115.2KBps
+  // 8Mhz, Over8=0, USARTDIV=4.3125
+  // USARTDIV = DIV_Mantissa + DIV_Fraction/16
+  // DIV_Mantisa=4; DIV_Fraction=0.3125*16=5
+  volatile int *usart1_brr = (volatile int *)USART1_BRR;
+  *usart1_brr = (*usart1_brr & 0xFFFF0000) | (4 << 4) | 5;
+
+  // Set TE bit to send idle frame as first transmission
+  *usart1_cr1 |= 0x8;
+}
+
+void send_usart_data(const char *buf, long len)
+{
+  volatile int *usart_sr = (volatile int *)USART1_SR;
+
+  for (; len > 0; --len, ++buf)
+  {
+    // Wait for TXE=1
+    while (!(*usart_sr & 0x80))
+      continue;
+
+    // Write data
+    volatile int *usart_dr = (volatile int *)USART1_DR;
+    *usart_dr = (*usart_dr & 0xFFFFFF00) | *buf;
+  }
+
+  // Wait for TC=1
+  while (!(*usart_sr & 0x40))
+    continue;
+}
+
 int main(void)
 {
     // Enable GPIO[A, B, G] and CRC clock
-    volatile int *rcc = (volatile int *)(RCC_AHB1ENR);
-    *rcc = (*rcc | 0x1043) & 0xFFFFF843;
+    volatile int *rcc_ahb1enr = (volatile int *)RCC_AHB1ENR;
+    *rcc_ahb1enr = (*rcc_ahb1enr | 0x1043) & 0xFFFFF843;
+
+    // Enable USART1
+    volatile int *rcc_apb2enr = (volatile int *)RCC_APB2ENR;
+    *rcc_apb2enr = *rcc_apb2enr | 0x10;
 
     // Set GPIO mode
     set_moder_mode((volatile int *)GPIOA_MODER, 0, MODER_INPUT);
@@ -78,6 +134,12 @@ int main(void)
     // Enable interrupts in Cortex m4
     volatile int *nvic_iser0 = (volatile int *)NVIC_ISER0;
     *nvic_iser0 |= 1 << 6;
+
+    // Enable UART transmitter
+    enable_uart_transmitter();
+
+    char buf[] = "Hello World!\n";
+    send_usart_data(buf, sizeof (buf));
 
     while (1)
       continue;
