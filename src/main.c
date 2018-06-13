@@ -51,7 +51,7 @@ static void set_moder_mode(volatile int *gpio_moder, int pos, int mode)
   *gpio_moder = (*gpio_moder & ~(3 << (pos * 2))) | (mode << (pos * 2));
 }
 
-static void enable_uart_transmitter(void)
+static void enable_usart(void)
 {
   volatile int *usart1_cr1 = (volatile int *)USART1_CR1;
 
@@ -76,9 +76,20 @@ static void enable_uart_transmitter(void)
   // DIV_Mantisa=4; DIV_Fraction=0.3125*16=5
   volatile int *usart1_brr = (volatile int *)USART1_BRR;
   *usart1_brr = (*usart1_brr & 0xFFFF0000) | (4 << 4) | 5;
+}
 
+static void enable_usart_transmitter(void)
+{
   // Set TE bit to send idle frame as first transmission
+  volatile int *usart1_cr1 = (volatile int *)USART1_CR1;
   *usart1_cr1 |= 0x8;
+}
+
+static void enable_usart_receiver(void)
+{
+  // Set RE bit
+  volatile int *usart1_cr1 = (volatile int *)USART1_CR1;
+  *usart1_cr1 |= 0x4;
 }
 
 void send_usart_data(const char *buf, long len)
@@ -135,11 +146,20 @@ int main(void)
     volatile int *nvic_iser0 = (volatile int *)NVIC_ISER0;
     *nvic_iser0 |= 1 << 6;
 
-    // Enable UART transmitter
-    enable_uart_transmitter();
+    // Enable UART
+    enable_usart();
 
-    char buf[] = "Hello World!\n";
-    send_usart_data(buf, sizeof (buf));
+    enable_usart_receiver();
+
+    // Read char (should be done with interrupt)
+    volatile int *usart_dr = (volatile int *)USART1_DR;
+    volatile int *usart_sr = (volatile int *)USART1_SR;
+    while (!(*usart_sr & 0x20))
+      continue;
+
+    /* enable_usart_transmitter(); */
+    /* char buf[] = "Hello World!\n"; */
+    /* send_usart_data(buf, sizeof (buf)); */
 
     while (1)
       continue;

@@ -56,3 +56,7 @@ DEFAULT PLL INPUT CLOCK     HSE 8MHz
 PLL_M                       8
 PLL_N                       360
 PLL_P                       2
+
+Blanc : RX
+
+Vert : TX
