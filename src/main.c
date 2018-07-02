@@ -53,6 +53,10 @@ static void set_moder_mode(volatile int *gpio_moder, int pos, int mode)
 
 static void enable_usart(void)
 {
+    // Set alternate mode (AF7 = 0b0111) for PB6 and PB7
+    volatile int *gpiob_afrl = (volatile int *)GPIOB_AFRL;
+    *gpiob_afrl = (*gpiob_afrl | 0x77000000);
+
   volatile int *usart1_cr1 = (volatile int *)USART1_CR1;
 
   // Enable USART
@@ -69,7 +73,7 @@ static void enable_usart(void)
   // Disable DMAT
   volatile int *usart1_cr3 = (volatile int *)USART1_CR3;
   *usart1_cr3 &= 0xFFFFFF7F;
-
+  
   // Configure baud rate for 115.2KBps
   // 8Mhz, Over8=0, USARTDIV=4.3125
   // USARTDIV = DIV_Mantissa + DIV_Fraction/16
@@ -151,15 +155,17 @@ int main(void)
 
     enable_usart_receiver();
 
+    enable_usart_transmitter();
+    char buf[] = "Hello World\n";
+    while (1)
+        send_usart_data(buf, sizeof (buf));
+    //send_usart_data("\xFF", 1);
+    
     // Read char (should be done with interrupt)
     volatile int *usart_dr = (volatile int *)USART1_DR;
     volatile int *usart_sr = (volatile int *)USART1_SR;
     while (!(*usart_sr & 0x20))
       continue;
-
-    /* enable_usart_transmitter(); */
-    /* char buf[] = "Hello World!\n"; */
-    /* send_usart_data(buf, sizeof (buf)); */
 
     while (1)
       continue;
