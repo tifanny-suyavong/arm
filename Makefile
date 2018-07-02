@@ -14,13 +14,16 @@ OBJS=$(SRC:.c=.o)
 ELF=startup.elf
 BIN=startup.bin
 
-.PHONY: all clean
+.PHONY: all clean flash
 
 all:
 	$(CC) $(CFLAGS) -c $(SRC)
 	mv *.o $(SRC_DIR)
 	$(LD) -T $(LD_SCRIPT) $(OBJS) -o $(ELF)
 	$(OBJCOPY) -O binary -S $(ELF) $(BIN)
+
+flash:
+	st-flash --format binary write startup.bin 0x08000000
 
 gdb:
 	arm-none-eabi-gdb startup.elf
