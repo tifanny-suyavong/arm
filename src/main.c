@@ -79,6 +79,23 @@ void send_usart_data(const char *buf, long len)
     continue;
 }
 
+void echo(void)
+{
+  char c = 0;
+
+  volatile int *usart_dr = (volatile int *)USART1_DR;
+  volatile int *usart_sr = (volatile int *)USART1_SR;
+
+  while (1)
+  {
+    while (!(*usart_sr & 0x20))
+      continue;
+
+    c = *usart_dr;
+    send_usart_data(&c, 1);
+  }
+}
+
 int main(void)
 {
   // Enable GPIO[A, B, G] and CRC clock
@@ -107,14 +124,14 @@ int main(void)
   // Enable UART
   enable_usart();
 
-//  enable_usart_receiver();
-
+  enable_usart_receiver();
   enable_usart_transmitter();
-  char buf[] = "Hello World";
+
+  echo();
+/*  char buf[] = "Hello World";
   while (1)
     send_usart_data(buf, sizeof (buf));
-  //send_usart_data("\xFF", 1);
-
+*/
   // Read char (should be done with interrupt)
   volatile int *usart_dr = (volatile int *)USART1_DR;
   volatile int *usart_sr = (volatile int *)USART1_SR;
