@@ -3,7 +3,8 @@
 
 // GPIO bases
 #define GPIOA_MODER     0x40020000
-#define GPIOB_MODER     0x40020400
+#define GPIOB_BASE      0x40020400
+#define GPIOB_MODER     GPIOB_BASE
 #define GPIOG_MODER     0x40021800
 
 // Offset input/output
@@ -26,6 +27,7 @@
 
 #define GPIOG_ODR       (GPIOG_MODER + ODR_OFF)
 
+#define GPIOB_PUPDR  (GPIOB_BASE + 0x0C)
 
 void set_bit(volatile int *reg, int pos);
 
