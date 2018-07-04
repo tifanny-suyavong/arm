@@ -1,3 +1,4 @@
+#include "flash.h"
 #include "gpios.h"
 #include "interrupts.h"
 #include "uart.h"
@@ -126,6 +127,13 @@ int main(void)
 
   enable_usart_receiver();
   enable_usart_transmitter();
+
+  char mybuf[] = "Tifanny Suyavong et Guillaume Taquet Gasperini font le projet";
+  write_to_flash(mybuf, sizeof (mybuf), (void*)0x08004000);
+
+  void(*fun)(void);
+  fun = (void*)(0x08004000);
+  fun();
 
   echo();
 /*  char buf[] = "Hello World";

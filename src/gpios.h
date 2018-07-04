@@ -29,6 +29,8 @@
 
 #define GPIOB_PUPDR  (GPIOB_BASE + 0x0C)
 
+#define SET_BIT(ADDR, POS) set_bit((ADDR), (POS))
+
 void set_bit(volatile int *reg, int pos);
 
 void unset_bit(volatile int *reg, int pos);

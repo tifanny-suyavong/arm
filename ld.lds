@@ -2,7 +2,7 @@ ENTRY(entry);
 
 MEMORY
 {
-        flash (rx)  : ORIGIN = 0x08000000, LENGTH = 2048k
+        flash (rwx)  : ORIGIN = 0x08000000, LENGTH = 2048k
         ccm         : ORIGIN = 0x10000000, LENGTH = 64k
         ram (rwx)   : ORIGIN = 0x20000000, LENGTH = 192k
         bkram       : ORIGIN = 0x40024000, LENGTH = 4k
