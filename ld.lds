@@ -34,6 +34,7 @@ SECTIONS
 
         .bss :
         {
+                _bss = .;
                 *(.bss*)
                 *(COMMON)
                 . = ALIGN(4);

@@ -4,6 +4,7 @@
 extern void *_stack;
 extern uint32_t _data;
 extern uint32_t _edata;
+extern uint32_t _bss;
 extern uint32_t _ebss;
 extern uint32_t _data_loadaddr;
 
@@ -18,6 +19,9 @@ extern void interrupt_handler(void);
 
 void entry(void)
 {
+  for (uint32_t *bss = &_bss; bss < &_ebss; bss++)
+    *bss = 0;
+  
   uint32_t *src = &_data_loadaddr, *dst = &_data;
   while (dst < &_edata)
     *dst++ = *src++;
