@@ -2,12 +2,12 @@
 
 void set_bit(volatile int *reg, int pos)
 {
-    *reg |= (1 << pos);
+    *reg = (*reg | (1 << pos));
 }
 
 void unset_bit(volatile int *reg, int pos)
 {
-    *reg &= ~(1 << pos);
+    *reg = (*reg & ~(1 << pos));
 }
 
 void set_moder_mode(volatile int *gpio_moder, int pos, int mode)

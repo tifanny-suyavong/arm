@@ -122,15 +122,19 @@ int main(void)
 
   enable_button_interrupt();
 
+  unlock();
+  erase_sector(1);
+  char mybuf[] = "Tifanny Suyavong et Guillaume Taquet Gasperini font le projet";
+  write_to_flash(mybuf, sizeof (mybuf), (char*)0x08004000);
+  lock();
+  
   // Enable UART
   enable_usart();
 
   enable_usart_receiver();
   enable_usart_transmitter();
 
-  char mybuf[] = "Tifanny Suyavong et Guillaume Taquet Gasperini font le projet";
-  write_to_flash(mybuf, sizeof (mybuf), (void*)0x08004000);
-
+  
   void(*fun)(void);
   fun = (void*)(0x08004000);
   fun();
