@@ -9,77 +9,6 @@
 #define RCC_AHB1ENR  (RCC_BASE + 0x30)
 #define RCC_APB2ENR  (RCC_BASE + 0x44)
 
-#define BAUDRATE 115200
-
-static void enable_usart(void)
-{
-  // Set alternate mode (AF7 = 0b0111) for PB6 and PB7
-  volatile int *gpiob_afrl = (volatile int *)GPIOB_AFRL;
-  *gpiob_afrl = (*gpiob_afrl | 0x77000000);
-
-  volatile int *usart1_cr1 = (volatile int *)USART1_CR1;
-
-  // Enable USART
-  // Set UE and M (8 bits)
-  *usart1_cr1 = (*usart1_cr1 | 0x2000) & 0xFFFFEFFF;
-
-  // Disable parity
-  *usart1_cr1 &= 0xFFFFFBFF;
-
-  // Set 1 stop bit
-  volatile int *usart1_cr2 = (volatile int *)USART1_CR2;
-  *usart1_cr2 &= 0xFFFFCFFF;
-
-  // Disable DMAT
-  volatile int *usart1_cr3 = (volatile int *)USART1_CR3;
-  *usart1_cr3 &= 0xFFFFFF7F;
-
-  // Configure baud rate for 115.2KBps
-  // 16Mhz, Over8=0, USARTDIV=8.6875
-  // USARTDIV = DIV_Mantissa + DIV_Fraction/16
-  // DIV_Mantisa=8; DIV_Fraction=0.6875*16=11
-  volatile int *usart1_brr = (volatile int *)USART1_BRR;
-  int mantissa = 8;
-  int fractional = 11;
-  // compute_brr_parts(BAUDRATE, &mantissa, &fractional);
-  *usart1_brr = (*usart1_brr & 0xFFFF0000) | (mantissa << 4) | fractional;
-}
-
-static void enable_usart_transmitter(void)
-{
-  // Set TE bit to send idle frame as first transmission
-  volatile int *usart1_cr1 = (volatile int *)USART1_CR1;
-  *usart1_cr1 |= 0x8;
-}
-
-static void enable_usart_receiver(void)
-{
-  // Set RE bit
-  volatile int *usart1_cr1 = (volatile int *)USART1_CR1;
-  *usart1_cr1 |= 0x4;
-}
-
-void send_usart_data(const char *buf, long len)
-{
-  volatile int *usart_sr = (volatile int *)USART1_SR;
-
-  for (; len > 0; --len, ++buf)
-  {
-    // Wait for TXE=1
-    while (!(*usart_sr & 0x80))
-      continue;
-
-    // Write data
-//    volatile int *usart_dr = (volatile int *)USART1_DR;
-    volatile char *usart_dr = ((volatile char *)USART1_DR) + 3;
-    *usart_dr |= *buf;
-  }
-
-  // Wait for TC=1
-  while (!(*usart_sr & 0x40))
-    continue;
-}
-
 void echo(void)
 {
   char c = 0;
@@ -127,14 +56,13 @@ int main(void)
   char mybuf[] = "Tifanny Suyavong et Guillaume Taquet Gasperini font le projet";
   write_to_flash(mybuf, sizeof (mybuf), (char*)0x08004000);
   lock();
-  
+
   // Enable UART
   enable_usart();
 
   enable_usart_receiver();
   enable_usart_transmitter();
 
-  
   void(*fun)(void);
   fun = (void*)(0x08004000);
   fun();

@@ -9,7 +9,7 @@ LD_SCRIPT=ld.lds
 
 SRC_DIR=src
 
-SRC=$(addprefix src/,main.c interrupts.c gpios.c entry.c flash.c)
+SRC=$(addprefix src/,main.c interrupts.c gpios.c entry.c flash.c uart.c)
 OBJS=$(SRC:.c=.o)
 ELF=startup.elf
 BIN=startup.bin

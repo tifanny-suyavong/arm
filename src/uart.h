@@ -9,4 +9,9 @@
 #define USART1_DR    (USART1_BASE + 0x04)
 #define USART1_SR    (USART1_BASE)
 
+void enable_usart(void);
+void enable_usart_transmitter(void);
+void enable_usart_receiver(void);
+void send_usart_data(const char *buf, long len);
+
 #endif
