@@ -60,3 +60,15 @@ PLL_P                       2
 Blanc : RX
 
 Vert : TX
+
+
+# HEY
+
+Pour envoyer payload.bin :
+
+``` bash
+sudo stty -F /dev/ttyUSB0 115200 cs8 -cstopb -parenb -echo -cooked -parenb min 1 time 1
+cat payload.bin > /dev/ttyUSB0
+```
+
+```
