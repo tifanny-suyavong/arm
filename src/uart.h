@@ -13,5 +13,6 @@ void enable_usart(void);
 void enable_usart_transmitter(void);
 void enable_usart_receiver(void);
 void send_usart_data(const char *buf, long len);
+void read_usart_data(void *dest, unsigned long count);
 
 #endif

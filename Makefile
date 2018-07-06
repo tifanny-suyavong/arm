@@ -17,11 +17,11 @@ PAYLOAD_NAME=payload
 
 .PHONY: all clean flash gdb
 
-all: startup payload
+all: payload startup
 
 startup:
-	$(CC) $(CFLAGS) -c $(SRC)
-	mv *.o $(SRC_DIR)
+	$(CC) $(CFLAGS) -c $(SRC) -DFLASH_BIN_SIZE="$(shell stat --format '%s' $(PAYLOAD_NAME).bin)"
+	cp *.o $(SRC_DIR)
 	$(LD) -T $(LD_SCRIPT) $(OBJS) -o $(ELF)
 	$(OBJCOPY) -O binary -S $(ELF) $(BIN)
 
@@ -32,9 +32,9 @@ payload: OBJS=$(SRC:.c=.o)
 payload:
 #	$(CC) $(CFLAGS) $(SRC) -o $(BIN)
 	$(CC) $(CFLAGS) -c $(SRC)
-	mv *.o $(SRC_DIR)
+	cp *.o $(SRC_DIR)
 	$(LD) -T $(LD_SCRIPT) $(OBJS) -o $(ELF)
-	$(OBJCOPY) -O binary -S $(ELF) --only-section='.text.*' $(BIN)
+	$(OBJCOPY) -O binary -S $(ELF) $(BIN)
 
 flash:
 	st-flash --format binary write $(BIN) 0x08000000

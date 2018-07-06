@@ -19,7 +19,7 @@ void erase_sector(int sector)
 {
     volatile int *flash_sr = (volatile int*)FLASH_SR;
     volatile int *flash_cr = (volatile int*)FLASH_CR;
-    
+
     while ((*flash_sr & (1 << FLASH_SR_BSY_I)))
         continue;
 
