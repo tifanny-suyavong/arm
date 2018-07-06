@@ -10,7 +10,7 @@
 #define RCC_APB2ENR  (RCC_BASE + 0x44)
 
 #define PAGE_SIZE 16384
-#define FLASH_ADDR 0x08004000
+#define FLASH_ADDR 0x08008000
 //#define FLASH_BIN_SIZE 588
 
 /*void read_and_flash(void* flash_addr)
@@ -73,12 +73,12 @@ int main(void)
   char buf[PAGE_SIZE];
   read_usart_data(buf, FLASH_BIN_SIZE);
   unlock();
-  erase_sector(1);
+  erase_sector(2);
   write_to_flash(buf, FLASH_BIN_SIZE, (void*)FLASH_ADDR);
   lock();
 
   void(*fun)(void);
-  fun = (void*)(FLASH_ADDR);
+  fun = (void*)(FLASH_ADDR + 0x1ac);
   fun();
 
 //  echo();

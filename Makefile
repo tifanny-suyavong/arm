@@ -27,13 +27,13 @@ startup:
 
 payload: ELF=$(PAYLOAD_NAME).elf
 payload: BIN=$(PAYLOAD_NAME).bin
-payload: SRC=$(addprefix src/,blink.c interrupts.c gpios.c)
+payload: SRC=$(addprefix src/,entry.c blink.c interrupts.c gpios.c)
 payload: OBJS=$(SRC:.c=.o)
 payload:
 #	$(CC) $(CFLAGS) $(SRC) -o $(BIN)
 	$(CC) $(CFLAGS) -c $(SRC)
 	cp *.o $(SRC_DIR)
-	$(LD) -T $(LD_SCRIPT) $(OBJS) -o $(ELF)
+	$(LD) -T bin/$(LD_SCRIPT) $(OBJS) -o $(ELF)
 	$(OBJCOPY) -O binary -S $(ELF) $(BIN)
 
 flash:

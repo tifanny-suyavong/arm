@@ -71,4 +71,6 @@ sudo stty -F /dev/ttyUSB0 115200 cs8 -cstopb -parenb -echo -cooked -parenb min 1
 cat payload.bin > /dev/ttyUSB0
 ```
 
+Addr de début : 0x80081ac
+
 ```
