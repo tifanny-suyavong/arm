@@ -31,7 +31,7 @@ void erase_sector(int sector)
     SET_BIT(flash_cr, 16);
 
     while ((*flash_sr & (1 << FLASH_SR_BSY_I)))
-        continue;
+      continue;
 }
 
 void write_to_flash(const char *buf, long size, char *addr)

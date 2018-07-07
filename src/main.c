@@ -11,7 +11,7 @@
 
 #define PAGE_SIZE 16384
 #define FLASH_ADDR 0x08008000
-//#define FLASH_BIN_SIZE 588
+#define FLASH_BIN_SIZE 1152
 
 /*void read_and_flash(void* flash_addr)
 {
@@ -22,6 +22,7 @@
   write_to_flash(buf, count, flash_addr);
 }
 */
+
 void echo(void)
 {
   char c = 0;
@@ -82,10 +83,6 @@ int main(void)
   fun();
 
 //  echo();
-/*  char buf[] = "Hello World";
-  while (1)
-    send_usart_data(buf, sizeof (buf));
-*/
 
   while (1)
     continue;

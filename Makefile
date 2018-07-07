@@ -1,7 +1,7 @@
 CC=arm-none-eabi-gcc
 LD=arm-none-eabi-ld
 OBJCOPY=arm-none-eabi-objcopy
-CFLAGS=-O0 -W -Wall -Wno-deprecated-declaration -Wno-unused-parameter -Wundef\
+CFLAGS=-O0 -W -Wall -Wdeprecated-declarations -Wno-unused-parameter -Wundef\
 -ffunction-sections -mcpu=cortex-m4 -fno-exceptions -mfloat-abi=hard -mthumb \
 -fno-omit-frame-pointer -Wextra -g
 
@@ -30,7 +30,6 @@ payload: BIN=$(PAYLOAD_NAME).bin
 payload: SRC=$(addprefix src/,entry.c blink.c interrupts.c gpios.c)
 payload: OBJS=$(SRC:.c=.o)
 payload:
-#	$(CC) $(CFLAGS) $(SRC) -o $(BIN)
 	$(CC) $(CFLAGS) -c $(SRC)
 	cp *.o $(SRC_DIR)
 	$(LD) -T bin/$(LD_SCRIPT) $(OBJS) -o $(ELF)
