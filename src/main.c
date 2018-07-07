@@ -11,7 +11,6 @@
 
 #define PAGE_SIZE 16384
 #define FLASH_ADDR 0x08008000
-#define FLASH_BIN_SIZE 1152
 
 /*void read_and_flash(void* flash_addr)
 {
@@ -78,10 +77,14 @@ int main(void)
   write_to_flash(buf, FLASH_BIN_SIZE, (void*)FLASH_ADDR);
   lock();
 
-  void(*fun)(void);
-  fun = (void*)(FLASH_ADDR + 0x1ac);
-  fun();
+  /* void(*fun)(void); */
+  /* fun = (void*)(FLASH_ADDR + 0x1ac); */
+  /* fun(); */
 
+  /* __asm__ volatile ("ldr r3, 0x80041ac"); */
+  /* __asm__ volatile ("str r3, [r4]"); */
+  __asm__ volatile ("b 0x80081f8");
+  
 //  echo();
 
   while (1)
