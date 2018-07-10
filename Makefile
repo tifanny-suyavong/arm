@@ -46,4 +46,4 @@ gdb:
 	arm-none-eabi-gdb startup.elf
 
 clean:
-	$(RM) $(BIN) $(ELF) $(OBJS) $(PAYLOAD_NAME).{bin,elf} *~ *.swp
+	$(RM) $(BIN) $(ELF) $(OBJS) $(PAYLOAD_NAME).{bin,elf} *~ *.swp *.o
